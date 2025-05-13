@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 
 const Register = () => {
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     name: "",
@@ -15,11 +17,32 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle signup logic here
-    // Don't forget to handle errors, both for yourself (dev) and for the client (via a Bootstrap Alert)
-    // Redirect to Login on success
+    setError("");
+    setSuccess("");
+
+    try {
+      const response = await fetch(
+        "https://offers-api.digistos.com/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Une erreur s'est produite lors de l'inscription.");
+      }
+
+      setSuccess("Inscription réussie.");
+    } catch (error) {
+      console.error(error.message);
+      setError(error.message);
+    }
     console.log("Form submitted:", formData);
   };
 
