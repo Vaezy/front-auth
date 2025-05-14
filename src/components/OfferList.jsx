@@ -1,5 +1,4 @@
-import React from "react";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router";
 
 const OfferList = ({ offers }) => {

@@ -41,10 +41,20 @@ const LoginPage = () => {
         }
       );
 
+      const data = await response.json();
       if (!response.ok) {
-        const data = await response.json();
         throw { status: response.status, message: data.message };
       }
+
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({
+          token: data.access_token,
+          expiresAt: new Date(
+            Date.now() + data.expires_in * 1000
+          ).toISOString(),
+        })
+      );
 
       navigate("/offres/professionnelles");
     } catch (error) {
@@ -52,7 +62,7 @@ const LoginPage = () => {
       if (error.status === 401) {
         setError("Identifiants invalides.");
       } else {
-        setError("Une erreur est survenue lors de l'inscription.");
+        setError("Une erreur est survenue lors de la connexion.");
       }
     }
   };
