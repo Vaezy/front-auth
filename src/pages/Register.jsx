@@ -1,9 +1,18 @@
 import { useState } from "react";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Row,
+} from "react-bootstrap";
+import { useNavigate } from "react-router";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     name: "",
@@ -28,6 +37,7 @@ const Register = () => {
         {
           method: "POST",
           headers: {
+            Accept: "application/json",
             "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
@@ -35,15 +45,15 @@ const Register = () => {
       );
 
       if (!response.ok) {
-        throw new Error("Une erreur s'est produite lors de l'inscription.");
+        const data = await response.json();
+        throw { status: response.status, message: data.message };
       }
 
-      setSuccess("Inscription réussie.");
+      navigate("/connexion");
     } catch (error) {
-      console.error(error.message);
-      setError(error.message);
+      console.error(`Error: ${error.message} (${error.status})`);
+      setError("Une erreur est survenue lors de l'inscription.");
     }
-    console.log("Form submitted:", formData);
   };
 
   return (
@@ -52,6 +62,11 @@ const Register = () => {
         <Col xs={12} sm={8} md={6} lg={4}>
           <Card className="p-4 shadow-lg">
             <h2 className="text-center mb-4">Créer un compte</h2>
+            {error && (
+              <Alert variant="danger" className="text-center">
+                {error}
+              </Alert>
+            )}
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="formEmail">
                 <Form.Label>Email</Form.Label>
