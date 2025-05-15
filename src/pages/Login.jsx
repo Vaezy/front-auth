@@ -8,10 +8,13 @@ import {
   Form,
   Row,
 } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
+import { loginSuccess } from "../store/authSlice";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // <-- INIT DISPATCH
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     email: "",
@@ -41,10 +44,19 @@ const LoginPage = () => {
         }
       );
 
+      const data = await response.json();
       if (!response.ok) {
-        const data = await response.json();
         throw { status: response.status, message: data.message };
       }
+
+      dispatch(
+        loginSuccess({
+          token: data.access_token,
+          expiresAt: new Date(
+            Date.now() + data.expires_in * 1000
+          ).toISOString(),
+        })
+      );
 
       navigate("/offres/professionnelles");
     } catch (error) {
@@ -52,7 +64,7 @@ const LoginPage = () => {
       if (error.status === 401) {
         setError("Identifiants invalides.");
       } else {
-        setError("Une erreur est survenue lors de l'inscription.");
+        setError("Une erreur est survenue lors de la connexion.");
       }
     }
   };

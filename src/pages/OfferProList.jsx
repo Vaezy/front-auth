@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Spinner, Alert } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Alert, Spinner } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import OfferList from "../components/OfferList.jsx";
 
 const OfferProList = () => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -15,17 +17,17 @@ const OfferProList = () => {
           {
             headers: {
               Accept: "application/json",
-              // Add Authorization token
+              Authorization: `Bearer ${token}`,
             },
           }
         );
 
-        const data = await response.json();
+        const { data: offers, message } = await response.json();
         if (!response.ok) {
-          throw { status: response.status, message: data.message };
+          throw { status: response.status, message: message };
         }
 
-        setOffers(data);
+        setOffers(offers);
       } catch (err) {
         if (err.status === 401) {
           setError("Vous n'êtes pas autorisé à accéder aux offres (401).");
