@@ -37,6 +37,7 @@ const LoginPage = () => {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify(formData),
         }
       );
@@ -52,7 +53,7 @@ const LoginPage = () => {
       if (error.status === 401) {
         setError("Identifiants invalides.");
       } else {
-        setError("Une erreur est survenue lors de l'inscription.");
+        setError("Une erreur est survenue lors de la connexion.");
       }
     }
   };

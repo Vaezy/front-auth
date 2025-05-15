@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Spinner, Alert } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Alert, Spinner } from "react-bootstrap";
 import OfferList from "../components/OfferList.jsx";
 
 const OfferProList = () => {
@@ -17,6 +17,7 @@ const OfferProList = () => {
               Accept: "application/json",
               // Add Authorization token
             },
+            credentials: "include",
           }
         );
 
