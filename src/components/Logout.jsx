@@ -29,7 +29,7 @@ const Logout = () => {
         console.error(`Error: ${error.message} (${error.status})`);
       } finally {
         dispatch(logout());
-        navigate("/login");
+        navigate("/connexion");
       }
     };
 
