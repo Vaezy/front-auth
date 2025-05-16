@@ -5,16 +5,14 @@ import "../assets/styles/Header.css";
 
 function Header() {
   const location = useLocation();
-  const getValidToken = () => {
-    const auth = JSON.parse(localStorage.getItem("auth"));
-    const isValid = auth && new Date(auth.expiresAt) > new Date();
-    return isValid ? auth.token : null;
-  };
-  const [token, setToken] = useState(getValidToken);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    setToken(getValidToken());
+    const auth = localStorage.getItem("auth");
+    const isValid = auth && new Date(auth) > new Date();
+    setIsConnected(isValid);
   }, [location]);
+
   return (
     <Navbar bg="light" data-bs-theme="light">
       <Container>
@@ -28,7 +26,7 @@ function Header() {
           <Nav.Link as={NavLink} to="/offres/professionnelles">
             Offres Professionnelles
           </Nav.Link>
-          {token ? (
+          {isConnected ? (
             <Nav.Link as={NavLink} to="/deconnexion">
               Déconnexion
             </Nav.Link>

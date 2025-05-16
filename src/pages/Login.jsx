@@ -47,6 +47,9 @@ const LoginPage = () => {
         throw { status: response.status, message: data.message };
       }
 
+      const expirationDate = new Date(Date.now() + 60 * 60 * 1000);
+      localStorage.setItem("auth", expirationDate.toISOString());
+
       navigate("/offres/professionnelles");
     } catch (error) {
       console.error(`Error: ${error.message} (${error.status})`);
